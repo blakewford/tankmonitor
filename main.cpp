@@ -1,16 +1,19 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstdint>
+
 #include <lgpio.h>
 #include <unistd.h>
+
+#include <sstream>
+#include <string>
+#include <fstream>
 
 #define INVALID_DISTANCE -1
 #define CONVERSION_CONSTANT 17150
 
 int main()
 {
-    const int GPIO_DEVICE = 4;
-
     const int TRIG_PIN = 5;
     const int ECHO_PIN = 22;
 
@@ -20,9 +23,30 @@ int main()
     const int MINIMUM_DISTANCE = 2;
     const int MAXIMUM_DISTANCE = 400; //cm
 
+    bool is_model3 = false;
+
+    std::string line;
+    std::ifstream cpuinfo("/proc/cpuinfo");
+    while(std::getline(cpuinfo, line))
+    {
+        if(line.find("Raspberry Pi 3") != std::string::npos)
+        {
+            is_model3 = true;
+            printf("Detected Raspberry Pi Model 3\n");
+        }
+    }
+
+    const int GPIO_DEVICE_PI_3 = 0;
+    const int GPIO_DEVICE_PI_5 = 4;
+    int gpio_device = GPIO_DEVICE_PI_3;
+    if(!is_model3)
+    {
+        gpio_device = GPIO_DEVICE_PI_5;
+    }
+
     while(true)
     {
-        auto handle = lgGpiochipOpen(GPIO_DEVICE);
+        auto handle = lgGpiochipOpen(gpio_device);
         if(handle < 0)
         {
             printf("Could not get GPIO chip handle!");
