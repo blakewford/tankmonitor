@@ -1,9 +1,10 @@
-CMD=g++ -std=c++20 $<
+SRC=main.cpp mqtt.cpp
+CMD=g++ -std=c++20 $(SRC)
 
-tankmonitor: main.cpp
+tankmonitor: $(SRC)
 	$(CMD) -o $@ -llgpio
 
-tankmonitor_x86: main.cpp
+tankmonitor_x86: $(SRC)
 	$(CMD) -o tankmonitor
 
 clean:

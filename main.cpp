@@ -14,8 +14,14 @@
 #include "simulate_lgpio.hpp"
 #endif
 
+#include "mqtt.h"
+
 #define INVALID_DISTANCE -1
 #define CONVERSION_CONSTANT 17150
+
+#define MQTT_BROKER_HOSTNAME "homeassistant"
+#define MQTT_USERNAME ""
+#define MQTT_PASSWORD ""
 
 int main()
 {
@@ -82,8 +88,16 @@ int main()
             {
                 distance = raw;
             }
+
+            int sock = mqtt::connect(MQTT_BROKER_HOSTNAME, MQTT_USERNAME, MQTT_PASSWORD);
+            if(sock == -1) continue;
+
             printf("%.0f\n", distance);
+
+            mqtt::disconnect(sock);
+            close(sock);
         }
+
         lgGpiochipClose(handle);
     }
 }
