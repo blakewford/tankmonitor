@@ -2,12 +2,17 @@
 #include <cstdlib>
 #include <cstdint>
 
-#include <lgpio.h>
 #include <unistd.h>
 
 #include <sstream>
 #include <string>
 #include <fstream>
+
+#ifdef __aarch64__
+#include <lgpio.h>
+#else
+#include "simulate_lgpio.hpp"
+#endif
 
 #define INVALID_DISTANCE -1
 #define CONVERSION_CONSTANT 17150
@@ -64,24 +69,12 @@ int main()
             lgGpioWrite(handle, TRIG_PIN, false);
 
             // Wait for pulse to start
-            double spent = 0;
-            double start = lguTimestamp();
             while(!lgGpioRead(handle, ECHO_PIN))
-            {
-                spent = (lguTimestamp() - start)/(1000*1000);
-            }
+                ;
 
-            printf("Spent %f\n", spent);
-
-            spent = 0;
-            start = lguTimestamp();
             double mark = lguTime();
             while(lgGpioRead(handle, ECHO_PIN))
-            {
-                spent = (lguTimestamp() - start)/(1000*1000);
-            }
-
-            printf("Spent %f\n", spent);
+                ;
 
             float distance = INVALID_DISTANCE;
             const float raw = (lguTime()-mark) * CONVERSION_CONSTANT;

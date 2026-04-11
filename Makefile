@@ -1,5 +1,10 @@
+CMD=g++ -std=c++20 $<
+
 tankmonitor: main.cpp
-	g++ -std=c++20 main.cpp -o $@ -llgpio
+	$(CMD) -o $@ -llgpio
+
+tankmonitor_x86: main.cpp
+	$(CMD) -o tankmonitor
 
 clean:
 	rm tankmonitor
