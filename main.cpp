@@ -55,13 +55,7 @@ int main()
                 break;
         }
 
-        std::string json = "{\"level\":";
-        json += std::to_string(percentage_full);
-        json += ",\"status\":\"";
-        json += status;
-        json += "\"}";
-
-        printf("%s\n", json.c_str());
+        update_status(percentage_full, status.c_str());
 
         mqtt::disconnect(g_sock);
         close(g_sock);

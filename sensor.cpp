@@ -10,6 +10,7 @@
 #endif
 
 #include "constants.h"
+#include "platform.h"
 
 float calculate_liquid_ratio(int gpio_device)
 {
@@ -25,7 +26,7 @@ float calculate_liquid_ratio(int gpio_device)
     auto handle = lgGpiochipOpen(gpio_device);
     if(handle < 0)
     {
-        printf("Could not get GPIO chip handle!");
+        update_status(0.0, "Could not get GPIO chip handle!");
         sleep(1); // Expected cycle time for the main loop
         return percentage_full;
     }

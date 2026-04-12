@@ -4,6 +4,17 @@
 #include <string>
 #include <fstream>
 
+void update_status(float percentage_full, const char* status)
+{
+    std::string json = "{\"level\":";
+    json += std::to_string(percentage_full);
+    json += ",\"status\":\"";
+    json += status;
+    json += "\"}";
+
+    printf("%s\n", json.c_str());
+}
+
 int get_active_gpio()
 {
     const int32_t GPIO_DEVICE_PI_3 = 0;
@@ -19,7 +30,7 @@ int get_active_gpio()
         if(line.find("Raspberry Pi 3") != std::string::npos)
         {
             is_model3 = true;
-            printf("Detected Raspberry Pi Model 3\n");
+            update_status(0.0, "Detected Raspberry Pi Model 3\n");
         }
     }
 
