@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <cstdint>
 
+#include <unistd.h>
+
 #ifdef __aarch64__
 #include <lgpio.h>
 #else
