@@ -30,7 +30,7 @@ int get_active_gpio()
         if(line.find("Raspberry Pi 3") != std::string::npos)
         {
             is_model3 = true;
-            update_status(0.0, "Detected Raspberry Pi Model 3\n");
+            update_status(0.0, "Detected Raspberry Pi Model 3");
         }
     }
 
