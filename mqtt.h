@@ -1,3 +1,5 @@
+#pragma once
+
 namespace mqtt
 {
     int connect(const char* hostname, const char* username, const char* password);

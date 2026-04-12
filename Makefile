@@ -1,4 +1,4 @@
-SRC=main.cpp mqtt.cpp
+SRC=main.cpp mqtt.cpp platform.cpp sensor.cpp pump.cpp 
 CMD=g++ -std=c++20 $(SRC)
 
 tankmonitor: $(SRC)

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <unistd.h>
 
 #define LG_OKAY 0
