@@ -9,6 +9,8 @@
 #include "simulate_lgpio.hpp"
 #endif
 
+#include <string>
+
 #include "constants.h"
 #include "platform.h"
 
@@ -26,7 +28,8 @@ float calculate_liquid_ratio(int gpio_device)
     auto handle = lgGpiochipOpen(gpio_device);
     if(handle < 0)
     {
-        update_status(0.0, "Could not get GPIO chip handle!");
+        std::string detail = "Could not get GPIO chip handle!";
+        update_status(0.0, UNKNOWN, detail.c_str());
         sleep(1); // Expected cycle time for the main loop
         return percentage_full;
     }

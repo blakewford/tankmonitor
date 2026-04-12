@@ -37,25 +37,24 @@ int main()
 
 //        mqtt::publish(g_sock, LEVEL, std::to_string(percentage_full).c_str());
 
-        std::string status = STATE_STRINGS[state];
+        std::string detail = "";
         switch(state)
         {
             case NORMAL:
                 break;
             case COOL_DOWN:
-                status += " ";
-                status += std::to_string(state_count);
-                status += ", Non-ideal. Blocked additional RUN trigger because the level was previously unaffected";
+                detail += std::to_string(state_count);
+                detail += ",Non-ideal. Blocked additional RUN trigger because the level was previously unaffected";
                 break;
             case RUNNING:
             case UNKNOWN:
             default:
-                status += " ";
-                status += std::to_string(state_count);
+                detail += std::to_string(state_count);
                 break;
         }
 
-        update_status(percentage_full, status.c_str());
+        std::string status = STATE_STRINGS[state];
+        update_status(percentage_full, state, detail.c_str());
 
         mqtt::disconnect(g_sock);
         close(g_sock);
