@@ -1,3 +1,5 @@
 #pragma once
 
-void handle_pump(float percentage_full);
+#include "constants.h"
+
+PUMP_STATE handle_pump(float percentage_full);

@@ -60,7 +60,7 @@ float calculate_liquid_ratio(int gpio_device)
 
     if(distance != INVALID)
     {
-        percentage_full = (TANK_DEPTH-distance)/TANK_DEPTH;        
+        percentage_full = (TANK_DEPTH-distance)/TANK_DEPTH;
     }
 
     return percentage_full;
