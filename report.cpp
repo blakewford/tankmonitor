@@ -19,7 +19,7 @@ void log_status(float percentage_full, PUMP_STATE state, const char* detail)
     }
     json += "\"}";
 
-    FILE* f = fopen("status.json", "w");
+    FILE* f = fopen("/tmp/status.json", "w");
     fwrite(json.c_str(), 1, json.size(), f);
     fclose(f);
 
@@ -91,7 +91,7 @@ void create_status_report(float percentage_full, PUMP_STATE state, const char* d
     memset(buffer, '\0', BUFFER_SIZE);
     snprintf(buffer, BUFFER_SIZE, html.c_str(), percentage_full, "%", STATE_STRINGS[state], detail);
 
-    FILE* f = fopen("index.html", "w");
+    FILE* f = fopen("/tmp/index.html", "w");
     fwrite(buffer, 1, strlen(buffer), f);
     fclose(f);
 }
