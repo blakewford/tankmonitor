@@ -1,0 +1,11 @@
+[Unit]
+Description=Tank Monitor
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/tankmonitor
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

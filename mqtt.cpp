@@ -3,6 +3,7 @@
 #include <string>
 
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <sys/socket.h>
 
 #define MQTT_PORT 1883
@@ -59,37 +60,15 @@ namespace mqtt
         int8_t return_code = -1;
     };
 
-    void gethostbyname(const char* hostname, std::string& ip)
-    {
-        ip.clear();
-
-        std::string command = "ping ";
-        command += hostname;
-
-        FILE* f = popen(command.c_str(), "r");
-
-        const int32_t BUFFER_SIZE = 64;
-        char buffer[BUFFER_SIZE];
-        memset(buffer, '\0', BUFFER_SIZE);
-        fread(buffer, BUFFER_SIZE, 1, f);
-        pclose(f);
-
-        ip = buffer;
-        ip = ip.substr(ip.find('(') + 1);
-        ip = ip.substr(0, ip.find(')'));
-    }
-
     int connect(const char* hostname, const char* username, const char* password)
     {
-        std::string ip;
-        ip.clear();
-
-        gethostbyname(hostname, ip);
+        struct hostent* host_info = gethostbyname(hostname);
+        struct in_addr** addr_list = (struct in_addr**)host_info->h_addr_list;
 
         struct sockaddr_in address;
         address.sin_family = AF_INET;
         address.sin_port = htons(MQTT_PORT);
-        inet_pton(AF_INET, ip.c_str(), &address.sin_addr);
+        inet_pton(AF_INET, inet_ntoa(*addr_list[0]), &address.sin_addr);
 
         int sock = socket(AF_INET, SOCK_STREAM, 0);
         if(connect(sock, (struct sockaddr *)&address, sizeof(address)) != 0)

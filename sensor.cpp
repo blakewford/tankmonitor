@@ -45,8 +45,18 @@ float calculate_liquid_ratio(int gpio_device)
         lgGpioWrite(handle, TRIG_PIN, false);
 
         // Wait for pulse to start
+        int32_t spins = 0;
+        const int32_t MAXIMUM_SPINS = 512;
         while(!lgGpioRead(handle, ECHO_PIN))
-            ;
+        {
+            spins++;
+            if(spins > MAXIMUM_SPINS)
+            {
+                // Effectively timed out
+                lgGpiochipClose(handle);
+                return percentage_full;
+            }
+        }
 
         double mark = lguTime();
         while(lgGpioRead(handle, ECHO_PIN))
