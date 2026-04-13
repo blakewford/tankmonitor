@@ -9,6 +9,7 @@
 #include "mqtt.h"
 #include "platform.h"
 #include "pump.h"
+#include "report.h"
 #include "sensor.h"
 
 #include <string>

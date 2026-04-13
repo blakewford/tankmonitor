@@ -12,7 +12,7 @@
 #include <string>
 
 #include "constants.h"
-#include "platform.h"
+#include "report.h"
 
 float calculate_liquid_ratio(int gpio_device)
 {

@@ -1,27 +1,8 @@
-#include <cstdio>
-#include <cstdint>
-#include <cstring>
-
 #include <string>
 #include <fstream>
 
 #include "constants.h"
-
-void update_status(float percentage_full, PUMP_STATE state, const char* detail)
-{
-    std::string json = "{\"level\":";
-    json += std::to_string(percentage_full);
-    json += ",\"status\":\"";
-    json += STATE_STRINGS[state];
-    if(strlen(detail))
-    {
-        json += "\",\"summary\":\"";
-        json += detail;
-    }
-    json += "\"}";
-
-    printf("%s\n", json.c_str());
-}
+#include "report.h"
 
 int get_active_gpio()
 {
