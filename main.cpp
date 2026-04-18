@@ -22,6 +22,8 @@ int g_sock = INVALID;
 
 int main()
 {
+    usleep(PACE_MS*1000);
+
     int32_t state_count = 0;
     auto previous_state = UNKNOWN;
     int gpio_device = get_active_gpio();
@@ -36,7 +38,7 @@ int main()
         state_count = (previous_state == state) ? ++state_count: 0;
         previous_state = state;
 
-//        mqtt::publish(g_sock, LEVEL, std::to_string(percentage_full).c_str());
+        mqtt::publish(g_sock, LEVEL, std::to_string(percentage_full).c_str());
 
         std::string detail = "";
         switch(state)
@@ -61,5 +63,7 @@ int main()
         close(g_sock);
 
         g_sock = INVALID;
+
+        usleep(PACE_MS*1000); // No need to run any faster
     }
 }

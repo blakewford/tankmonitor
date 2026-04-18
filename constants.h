@@ -2,7 +2,8 @@
 
 #define INVALID -1
 
-const float TANK_DEPTH = 50.0f; // cm
+const float TANK_DEPTH = 70.0f; // cm
+const int32_t PACE_MS = 2000;
 
 enum PUMP_STATE: int32_t
 {
@@ -21,5 +22,4 @@ static const char* STATE_STRINGS[] =
 };
 
 static const char* LEVEL = "LIQUID";
-static const char* HALT  = "STOP_GRINDER";
 static const char* RUN   = "RUN_GRINDER";

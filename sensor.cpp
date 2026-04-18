@@ -77,5 +77,5 @@ float calculate_liquid_ratio(int gpio_device)
         percentage_full = (TANK_DEPTH-distance)/TANK_DEPTH;
     }
 
-    return percentage_full;
+    return std::max(percentage_full, 0.0f);
 }

@@ -35,7 +35,7 @@ void create_status_report(float percentage_full, PUMP_STATE state, const char* d
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
-    setTimeout(() => { location.reload(); }, 1000);
+    setTimeout(() => { location.reload(); }, %d);
   </script>
   <title>Tank Monitor</title>
   <style>
@@ -89,7 +89,7 @@ void create_status_report(float percentage_full, PUMP_STATE state, const char* d
     const int32_t BUFFER_SIZE = html.size() + 64;
     char buffer[BUFFER_SIZE];
     memset(buffer, '\0', BUFFER_SIZE);
-    snprintf(buffer, BUFFER_SIZE, html.c_str(), percentage_full, "%", STATE_STRINGS[state], detail);
+    snprintf(buffer, BUFFER_SIZE, html.c_str(), PACE_MS/2, percentage_full, "%", STATE_STRINGS[state], detail);
 
     FILE* f = fopen("/tmp/index.html", "w");
     fwrite(buffer, 1, strlen(buffer), f);
