@@ -6,6 +6,7 @@
 #include "mqtt.h"
 
 extern int g_sock;
+extern int g_lockout;
 
 PUMP_STATE handle_pump(float percentage_full)
 {
@@ -35,13 +36,16 @@ PUMP_STATE handle_pump(float percentage_full)
         const int32_t MINIMUM_REFILL_TIME = 60; // seconds
         if(diff > MINIMUM_REFILL_TIME) // We can't refill faster than this
         {
-            mqtt::publish(g_sock, RUN, "");
+            if(!g_lockout)
+            {
+                mqtt::publish(g_sock, RUN, "");
+            }
             last_drain = time(nullptr);
             state = RUNNING;
         }
         else
         {
-            state = COOL_DOWN;
+            state = INEFFECTIVE;
         }
     }
 

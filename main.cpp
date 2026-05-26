@@ -19,6 +19,7 @@
 #define MQTT_PASSWORD ""
 
 int g_sock = INVALID;
+int g_lockout = false;
 
 int main()
 {
@@ -44,10 +45,16 @@ int main()
         switch(state)
         {
             case NORMAL:
+                g_lockout = false;
+                if(state_count%15 == 0)
+                {
+                    mqtt::publish(g_sock, ESTOP, "");
+                }
                 break;
-            case COOL_DOWN:
+            case INEFFECTIVE:
                 detail += std::to_string(state_count);
-                detail += ",Non-ideal. Blocked additional RUN trigger because the level was previously unaffected";
+                detail += ",Non-ideal. Blocked additional RUN triggers because the level was previously unaffected";
+                g_lockout = true;
                 break;
             case RUNNING:
             case UNKNOWN:

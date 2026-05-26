@@ -10,7 +10,7 @@ enum PUMP_STATE: int32_t
     UNKNOWN,
     NORMAL,
     RUNNING,
-    COOL_DOWN
+    INEFFECTIVE
 };
 
 static const char* STATE_STRINGS[] =
@@ -18,8 +18,9 @@ static const char* STATE_STRINGS[] =
     "UNKNOWN",
     "NORMAL",
     "RUNNING",
-    "COOL_DOWN"
+    "INEFFECTIVE"
 };
 
 static const char* LEVEL = "LIQUID";
 static const char* RUN   = "RUN_GRINDER";
+static const char* ESTOP = "STOP_GRINDER";
