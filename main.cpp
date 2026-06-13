@@ -49,7 +49,7 @@ int main()
         {
             case NORMAL:
                 g_lockout = false;
-                if(state_count%15 == 0)
+                if(state_count%8 == 0)
                 {
                     wion::toggle(false);
                     mqtt::publish(g_sock, ESTOP, "");
