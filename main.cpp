@@ -11,8 +11,11 @@
 #include "pump.h"
 #include "report.h"
 #include "sensor.h"
+#include "wion.h"
 
 #include <string>
+
+const char* DEVICE_SERIAL = "";
 
 #define MQTT_BROKER_HOSTNAME "homeassistant"
 #define MQTT_USERNAME ""
@@ -24,6 +27,8 @@ int g_lockout = false;
 int main()
 {
     usleep(PACE_MS*1000);
+
+    wion::discover(DEVICE_SERIAL);
 
     int32_t state_count = 0;
     auto previous_state = UNKNOWN;
