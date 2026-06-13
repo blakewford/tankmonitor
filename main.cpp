@@ -26,15 +26,13 @@ int g_lockout = false;
 
 int main()
 {
-    usleep(PACE_MS*1000);
-
-    wion::discover(DEVICE_SERIAL);
-
     int32_t state_count = 0;
     auto previous_state = UNKNOWN;
     int gpio_device = get_active_gpio();
     while(true)
     {
+        wion::discover(DEVICE_SERIAL);
+
         float percentage_full = calculate_liquid_ratio(gpio_device)*100;
 
         g_sock = mqtt::connect(MQTT_BROKER_HOSTNAME, MQTT_USERNAME, MQTT_PASSWORD);
@@ -53,6 +51,7 @@ int main()
                 g_lockout = false;
                 if(state_count%15 == 0)
                 {
+                    wion::toggle(false);
                     mqtt::publish(g_sock, ESTOP, "");
                 }
                 break;
@@ -75,7 +74,5 @@ int main()
         close(g_sock);
 
         g_sock = INVALID;
-
-        usleep(PACE_MS*1000); // No need to run any faster
     }
 }

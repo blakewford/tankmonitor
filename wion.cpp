@@ -9,9 +9,13 @@
 #include <unistd.h>
 #include <vector>
 
+#include "constants.h"
+
 #define DISCOVER_PORT                  25
+#define COMMAND_PORT                   80
 #define QUERY_SIZE                    128
 #define RESPONSE_SIZE                 408
+#define MODIFY_SWITCH              327702
 
 #pragma pack(push, 1)
 struct response
@@ -41,11 +45,40 @@ struct response
 };
 #pragma pack(pop)
 
-bool gKeepGoing = true;
+#pragma pack(push, 1)
+struct command
+{
+    uint32_t cmd;
+    uint32_t id;
+    uint16_t type;
+    uint8_t  version[6];
+    char     model[32];
+    char     name[32];
+    char     serial[32];
+    uint32_t status;
+    uint32_t counter;
+    uint32_t unknown;
+    uint32_t id2;
+    uint8_t  op;
+    uint8_t  value;
+};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+struct confirmation
+{
+    uint16_t uknown;
+    uint32_t uknown2;
+    uint32_t id;
+    uint8_t buffer[118];
+};
+#pragma pack(pop)
+
+response gFound;
 pthread_t gRecvP1;
-std::mutex gResponseMutex;
-std::vector<response> gFound;
 char gDeviceSerial[34];
+bool gKeepGoing = true;
+std::mutex gResponseMutex;
 
 struct broadcastParams
 {
@@ -107,12 +140,22 @@ void* recvBroadcast(void* arg)
         std::lock_guard<std::mutex> lock(gResponseMutex);
         if(!strcmp(target.serial, gDeviceSerial))
         {
-            gFound.push_back(target);
+            gFound = target;
             gKeepGoing = false;
         }
     }
 
     return nullptr;
+}
+
+void initializeCommand(command& c)
+{
+    memset(&c, '\0', sizeof(command));
+
+    c.cmd     = MODIFY_SWITCH;
+    c.counter = 0x55555555;
+    c.type    = 2;
+    c.op      = 2;
 }
 
 namespace wion 
@@ -145,5 +188,33 @@ namespace wion
         }
 
         quit(sock);
+        usleep(DEBOUNCE_MS*1000);
+    }
+
+    void toggle(bool on)
+    {
+        response r = gFound;
+
+        srand(time(nullptr));
+        int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+        struct sockaddr_in target = buildServerType(inet_addr(r.ip), COMMAND_PORT);
+
+        command toggle;
+        initializeCommand(toggle);
+
+        toggle.id = (rand() & 0xffff0000);
+        memcpy(toggle.model, r.model, 32);
+        toggle.value = on;
+
+        ssize_t sent = sendto(sock, &toggle, sizeof(command), 0, (sockaddr*)&target, sizeof(target));
+
+        socklen_t length;
+        confirmation confirm;
+        ssize_t recv = recvfrom(sock, &confirm, sizeof(confirmation), 0, (sockaddr*)&target, &length);
+
+    //    printf("%x %x\n", toggle.id >> 16, confirm.id);
+
+        close(sock);
+        usleep(DEBOUNCE_MS*1000);
     }
 }

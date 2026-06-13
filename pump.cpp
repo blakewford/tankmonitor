@@ -3,7 +3,7 @@
 #include <ctime>
 
 #include "constants.h"
-#include "mqtt.h"
+#include "wion.h"
 
 extern int g_sock;
 extern int g_lockout;
@@ -38,7 +38,7 @@ PUMP_STATE handle_pump(float percentage_full)
         {
             if(!g_lockout)
             {
-                mqtt::publish(g_sock, RUN, "");
+                wion::toggle(true);
             }
             last_drain = time(nullptr);
             state = RUNNING;
